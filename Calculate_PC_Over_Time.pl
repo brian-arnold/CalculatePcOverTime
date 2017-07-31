@@ -206,6 +206,7 @@ foreach my $ind (sort {$a cmp $b} keys %AnchorInds){
 
 
 my ($lower, $upper) ;
+my $dataPts = 0 ;
 foreach my $win (sort{$a <=> $b} keys %Windows){
 	my @counts = @{$Windows{$win}} ; # these are $Biallelic_Syn_SNP_Ref_Pos count indices
 	for ($lower = 0; $lower<((scalar @counts)-1); $lower++){
@@ -237,7 +238,8 @@ foreach my $win (sort{$a <=> $b} keys %Windows){
 					}
 		
 					push @{$PairWise_PC{$win}{$dataset}}, $compatibility ;
-				
+					$dataPts++ ;
+					
 					if( $haplos{$b1.$b2} > 1 ){
 						$haplos{$b1.$b2}-- ;
 					}else{
@@ -253,20 +255,22 @@ foreach my $win (sort{$a <=> $b} keys %Windows){
 
 
 my %PC_mean_results ;
-
-open OUT, ">./PCvsDate_MinMAF${min_MAF}_NumWindows${NumWindows}_TimeOrientation${TimeOrientation}.txt" ;
-print OUT "Window", "\t", "Sequence", "\t", "Date", "\t", "MeanPC", "\n" ;
-foreach my $win (sort{$a<=>$b} keys %PairWise_PC){
-	foreach my $dataset (sort{$a<=>$b} keys %{$PairWise_PC{$win}} ){
-		print OUT $win, "\t", ${$DataSetsToIterateThrough{$dataset}}[3], "\t", $Dates{ ${$DataSetsToIterateThrough{$dataset}}[3] },  "\t" ;
-		$sum = 0 ;
-		foreach (@{$PairWise_PC{$win}{$dataset}}){
-			$sum += $_ ;
+if($dataPts){
+	open OUT, ">./PCvsDate_MinMAF${min_MAF}_NumWindows${NumWindows}_TimeOrientation${TimeOrientation}.txt" ;
+	print OUT "Window", "\t", "Sequence", "\t", "Date", "\t", "MeanPC", "\n" ;
+	foreach my $win (sort{$a<=>$b} keys %PairWise_PC){
+		foreach my $dataset (sort{$a<=>$b} keys %{$PairWise_PC{$win}} ){
+			print OUT $win, "\t", ${$DataSetsToIterateThrough{$dataset}}[3], "\t", $Dates{ ${$DataSetsToIterateThrough{$dataset}}[3] },  "\t" ;
+			$sum = 0 ;
+			foreach (@{$PairWise_PC{$win}{$dataset}}){
+				$sum += $_ ;
+			}
+			print OUT $sum/scalar(@{$PairWise_PC{$win}{$dataset}}), "\n" ;	
 		}
-		print OUT $sum/scalar(@{$PairWise_PC{$win}{$dataset}}), "\n" ;	
 	}
+	close OUT ;
+}else{
+	print "There was no evidence of recombination in your dataset! Perhaps your species doesn't recombine, or there was not much diversity in your dataset\n" ;
 }
-close OUT ;
 
 exit ;
-
