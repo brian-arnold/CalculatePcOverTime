@@ -221,7 +221,7 @@ foreach my $win (sort{$a <=> $b} keys %Windows){
 			# only go through all remaining individuals not originally included in the trio
 			# if at least 3 haplotypes are seen in the "anchor" individuals, otherwise you'll never observe
 			# a fourth haplotype!
-			if(scalar keys %haplos < 3){
+			if(scalar keys %haplos == 3){
 				# go through individuals of lower samp size gene, if they differ  
 				foreach my $dataset ( sort {$a<=>$b} keys %DataSetsToIterateThrough ){
 					my $Ind4 = ${$DataSetsToIterateThrough{$dataset}}[3] ;
@@ -254,7 +254,7 @@ foreach my $win (sort{$a <=> $b} keys %Windows){
 
 my %PC_mean_results ;
 
-open OUT, ">./PCvsDate.txt" ;
+open OUT, ">./PCvsDate_MinMAF${min_MAF}_NumWindows${NumWindows}_TimeOrientation${TimeOrientation}.txt" ;
 print OUT "Window", "\t", "Sequence", "\t", "Date", "\t", "MeanPC", "\n" ;
 foreach my $win (sort{$a<=>$b} keys %PairWise_PC){
 	foreach my $dataset (sort{$a<=>$b} keys %{$PairWise_PC{$win}} ){
