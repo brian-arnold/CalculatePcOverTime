@@ -13,7 +13,7 @@ unless(scalar @ARGV == 5){
 	print "You didn't specify all four arguments the program needs:\n" ;
 	print "\t 1.) Filename of alignment (in fasta format)\n" ;
 	print "\t 2.) Filename of the tab-delimited table that specifies the sample date for each individual\n" ;
-	print "\t 3.) Filename of alignment (in fasta format)\n" ;
+	print "\t 3.) The minor allele frequency cutoff\n" ;
 	print "\t 4.) The number of windows, which should be less than half the sequence length or mayhem will ensue\n" ;
 	print "\t 5.) Whether the program looks for the decay of linkage forward-in-time (F) or reverse-in-time (R),\n" ;
 	exit ;
